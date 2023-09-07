@@ -1,13 +1,13 @@
 #!/usr/bin/python3
-""" Function that compress a folder """
+""" This is a function that compresses a folder. """
 from datetime import datetime
 from fabric.api import local
 
 
 def do_pack():
     """
-    must return the archive path if the archive has been correctly
-    generated. Otherwise, it should return None
+    It should return the archive path if the archive has been
+    generated correctly; otherwise, it should return None.
     """
     try:
         local("mkdir -p versions")
@@ -16,4 +16,5 @@ def do_pack():
         _gzip = local("tar -cvzf {} web_static".format(rout))
         return rout
     except Exception:
+
         return None
