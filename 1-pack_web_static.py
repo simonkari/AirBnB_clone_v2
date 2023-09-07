@@ -5,9 +5,8 @@ from fabric.api import local
 
 def do_pack():
     """
-    Compresses the 'web_static' folder and generates an
-    archive with a timestamp.If successful, it returns
-    the path to the archive; otherwise, it returns None.
+    Compresses the 'web_static' folder and creates a timestamped archive.
+    Returns the path to the archive if successful, otherwise returns None.
     """
     try:
         # Create the 'versions' directory if it doesn't exist
