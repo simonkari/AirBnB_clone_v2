@@ -4,7 +4,7 @@
 from flask import Flask
 
 app = Flask(__name__)
-app.config['DEBUG'] = True  # Enable debugging during development
+app.config['DEBUG'] = True
 app.url_map.strict_slashes = False
 
 @app.route('/')
