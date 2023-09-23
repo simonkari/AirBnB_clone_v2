@@ -57,7 +57,7 @@ def number_page(n):
     '''
     The page related to numbers
     '''
-    
+
     return '{} is a number'.format(n)
 
 
