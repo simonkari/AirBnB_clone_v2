@@ -1,29 +1,48 @@
 #!/usr/bin/python3
-'''A simple Flask web application.
+
 '''
+A basic web application built with Flask.
+'''
+
 from flask import Flask
 
 
 app = Flask(__name__)
-'''The Flask application instance.'''
+
+'''
+The instance of the Flask application
+'''
+
 app.url_map.strict_slashes = False
 
 
 @app.route('/')
 def index():
-    '''The home page.'''
+
+    '''
+    Home page.
+    '''
+
     return 'Hello HBNB!'
 
 
 @app.route('/hbnb')
 def hbnb():
-    '''The hbnb page.'''
+
+    '''
+    hbnb page.
+    '''
+
     return 'HBNB'
 
 
 @app.route('/c/<text>')
 def c_page(text):
-    '''The c page.'''
+
+    '''
+    c page.
+    '''
+    
     return 'C {}'.format(text.replace('_', ' '))
 
 
