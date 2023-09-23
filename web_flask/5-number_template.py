@@ -4,8 +4,8 @@ A straightforward Flask web application.
 '''
 from flask import Flask, render_template
 
+
 app = Flask(__name__)
-# Enable debugging during development
 app.config['DEBUG'] = True 
 app.url_map.strict_slashes = False
 
