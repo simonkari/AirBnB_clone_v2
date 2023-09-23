@@ -21,7 +21,7 @@ def index():
     '''
     Main page.
     '''
-    
+
     return 'Hello HBNB!'
 
 
@@ -30,7 +30,7 @@ def hbnb():
     '''
     hbnb page.
     '''
-    
+
     return 'HBNB'
 
 
@@ -39,6 +39,7 @@ def c_page(text):
     '''
     c page.
     '''
+
     return 'C {}'.format(text.replace('_', ' '))
 
 
@@ -79,7 +80,7 @@ def number_odd_or_even(n):
     '''
     The page titled 'number_odd_or_even
     '''
-    
+
     ctxt = {
         'n': n
     }
