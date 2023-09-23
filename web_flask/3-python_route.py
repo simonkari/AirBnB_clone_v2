@@ -11,6 +11,7 @@ app = Flask(__name__)
 '''
 The instance of the Flask application.
 '''
+
 app.url_map.strict_slashes = False
 
 
@@ -19,6 +20,7 @@ def index():
     '''
     The main page.
     '''
+
     return 'Hello HBNB!'
 
 
@@ -27,6 +29,7 @@ def hbnb():
     '''
     hbnb page.
     '''
+
     return 'HBNB'
 
 
@@ -35,15 +38,18 @@ def c_page(text):
     '''
     c page.
     '''
+
     return 'C {}'.format(text.replace('_', ' '))
 
 
 @app.route('/python/<text>')
 @app.route('/python', defaults={'text': 'is cool'})
 def python_page(text):
+
     '''
     python page.
     '''
+
     return 'Python {}'.format(text.replace('_', ' '))
 
 
