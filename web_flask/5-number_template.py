@@ -1,12 +1,17 @@
 #!/usr/bin/python3
+
 '''
-A straightforward Flask web application.
+An uncomplicated Flask web application.
 '''
+
 from flask import Flask, render_template
 
 
 app = Flask(__name__)
-app.config['DEBUG'] = True 
+'''
+The instance of the Flask application.
+'''
+
 app.url_map.strict_slashes = False
 
 
@@ -15,14 +20,17 @@ def index():
     '''
     Main page.
     '''
+
     return 'Hello HBNB!'
 
 
 @app.route('/hbnb')
 def hbnb():
+
     '''
     hbnb page.
     '''
+
     return 'HBNB'
 
 
@@ -31,30 +39,35 @@ def c_page(text):
     '''
     c page.
     '''
+
     return 'C {}'.format(text.replace('_', ' '))
 
 
 @app.route('/python/<text>')
-@app.route('/python')
-def python_page(text='is_cool'):
+@app.route('/python', defaults={'text': 'is cool'})
+def python_page(text):
     '''
     python page.
     '''
+
     return 'Python {}'.format(text.replace('_', ' '))
 
 
 @app.route('/number/<int:n>')
 def number_page(n):
     '''
-    Number page.
+    The page related to numbers.
     '''
+
     return '{} is a number'.format(n)
+
 
 @app.route('/number_template/<int:n>')
 def number_template(n):
     '''
-    The page named 'number_template
+    The page titled 'number_template'.
     '''
+
     ctxt = {
         'n': n
     }
@@ -62,4 +75,4 @@ def number_template(n):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port='5000')
