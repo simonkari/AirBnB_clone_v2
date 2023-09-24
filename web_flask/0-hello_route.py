@@ -6,8 +6,10 @@ Create a Flask web application.
 
 from flask import Flask
 
+
 # Create a Flask web application
 app = Flask(__name__)
+
 
 # Define the route for the root URL '/'
 @app.route('/', strict_slashes=False)
