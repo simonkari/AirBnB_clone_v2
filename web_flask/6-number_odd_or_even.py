@@ -1,91 +1,55 @@
 #!/usr/bin/python3
+""" Hello world in flask"""
 
-'''
-A basic Flask web application.
-'''
 
-from flask import Flask, render_template
-
+from flask import Flask
+from flask import render_template
 
 app = Flask(__name__)
 
-'''
-The instance of the Flask application
-'''
 
-app.url_map.strict_slashes = False
-
-
-@app.route('/')
-def index():
-    '''
-    Main page.
-    '''
-
+@app.route('/', strict_slashes=False)
+def hello_world():
+    """route index"""
     return 'Hello HBNB!'
 
 
-@app.route('/hbnb')
+@app.route('/hbnb', strict_slashes=False)
 def hbnb():
-    '''
-    hbnb page.
-    '''
-
+    """route HBNB"""
     return 'HBNB'
 
 
-@app.route('/c/<text>')
-def c_page(text):
-    '''
-    c page.
-    '''
-
-    return 'C {}'.format(text.replace('_', ' '))
+@app.route('/c/<text>', strict_slashes=False)
+def ctext(text):
+    """route C"""
+    return 'C %s' % text.replace('_', ' ')
 
 
-@app.route('/python/<text>')
-@app.route('/python')
-def python_page(text='is cool'):
-    '''
-    python page.
-    '''
-
-    return 'Python {}'.format(text.replace('_', ' '))
+@app.route('/python', defaults={'text': 'is cool'}, strict_slashes=False)
+@app.route('/python/<text>', strict_slashes=False)
+def ctextdefault(text):
+    """route C"""
+    return 'Python %s' % text.replace('_', ' ')
 
 
-@app.route('/number/<int:n>')
-def number_page(n):
-    '''
-    Number page.
-    '''
-
-    return '{} is a number'.format(n)
+@app.route('/number/<int:n>', strict_slashes=False)
+def number(n):
+    """route number"""
+    return '%d is a number' % n
 
 
-@app.route('/number_template/<int:n>')
-def number_template(n):
-
-    '''
-    The page named number_template
-    '''
-
-    ctxt = {
-        'n': n
-    }
-    return render_template('5-number.html', **ctxt)
+@app.route('/number_template/<int:n>', strict_slashes=False)
+def render_html(n):
+    """render template"""
+    return render_template('5-number.html', n=n)
 
 
-@app.route('/number_odd_or_even/<int:n>')
-def number_odd_or_even(n):
-    '''
-    The page titled 'number_odd_or_even
-    '''
-
-    ctxt = {
-        'n': n
-    }
-    return render_template('6-number_odd_or_even.html', **ctxt)
+@app.route('/number_odd_or_even/<int:n>', strict_slashes=False)
+def odd_or_evenl(n):
+    """render template odd_or_even"""
+    return render_template('6-number_odd_or_even.html', n=n)
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port='5000')
+    app.run(host='0.0.0.0')

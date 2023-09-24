@@ -1,58 +1,58 @@
 #!/usr/bin/python3
-'''
-Script that starts a Flask web application
-'''
-from flask import Flask, render_template
+""" List of states """
 
+
+from flask import Flask
+from flask import session
 from models import storage
-from models.state import State
+from flask import render_template
 
 
 app = Flask(__name__)
-'''
-The instance of the Flask application.
-'''
-app.url_map.strict_slashes = False
 
 
-@app.route('/states')
-@app.route('/states/<id>')
-def states(id=None):
-    '''
-    The page related to states.
-    '''
-    states = None
-    state = None
-    all_states = list(storage.all(State).values())
-    case = 404
-    if id is not None:
-        res = list(filter(lambda x: x.id == id, all_states))
-        if len(res) > 0:
-            state = res[0]
-            state.cities.sort(key=lambda x: x.name)
-            case = 2
-    else:
-        states = all_states
-        for state in states:
-            state.cities.sort(key=lambda x: x.name)
-        states.sort(key=lambda x: x.name)
-        case = 1
-    ctxt = {
-        'states': states,
-        'state': state,
-        'case': case
-    }
-    return render_template('9-states.html', **ctxt)
+@app.route('/states', strict_slashes=False)
+def states():
+    """lists states"""
+    storage.reload()
+    cities = None
+    states_dict = storage.all("State")
+    states = []
+    for k, v in states_dict.items():
+        states.append([v.id, v.name])
+    return render_template('9-states.html', states=states,
+                           cities=cities, id=None)
+
+
+@app.route('/states/<id>', strict_slashes=False)
+def states_id(id):
+    """lists states"""
+    storage.reload()
+    cities_dict = storage.all("City")
+    states_dict = storage.all("State")
+    cities_states = []
+    states = []
+    state = []
+    for k, v in states_dict.items():
+        states.append([v.id, v.name])
+    for city in cities_dict.values():
+        if city.state_id == id:
+            cities_states.append([city.id, city.name])
+    for s in states:
+        if s[0] == id:
+            state.append([s[0], s[1]])
+    if (len(state) != 0):
+        state = state[0][1]
+    if (len(cities_states) != 0 and len(state) != 0):
+        return render_template('9-states.html', states=state,
+                               cities=cities_states, id=id)
+    return render_template('9-states.html', states=None, cities=None, id=0)
 
 
 @app.teardown_appcontext
-def flask_teardown(exc):
-    '''
-    The event listener for the Flask app/request
-    context ending.
-    '''
+def teardown_db(error):
+    """lists states"""
     storage.close()
 
-
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port='5000')
+    app.run(host='0.0.0.0')

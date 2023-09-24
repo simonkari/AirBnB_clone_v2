@@ -1,20 +1,19 @@
 #!/usr/bin/python3
-""" This is a function that compresses a folder. """
-from datetime import datetime
 from fabric.api import local
+from time import strftime
+from datetime import date
 
 
 def do_pack():
-    """
-    It should return the archive path if the archive has been
-    generated correctly; otherwise, it should return None.
-    """
+    """ A script that generates archive the contents of web_static folder"""
+
+    filename = strftime("%Y%m%d%H%M%S")
     try:
         local("mkdir -p versions")
-        date = datetime.now().strftime("%Y%m%d%H%M%S")
-        rout = "versions/web_static_{}.tgz".format(date)
-        _gzip = local("tar -cvzf {} web_static".format(rout))
-        return rout
-    except Exception:
+        local("tar -czvf versions/web_static_{}.tgz web_static/"
+              .format(filename))
 
+        return "versions/web_static_{}.tgz".format(filename)
+
+    except Exception as e:
         return None

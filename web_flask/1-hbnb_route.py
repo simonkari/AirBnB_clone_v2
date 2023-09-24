@@ -1,35 +1,23 @@
 #!/usr/bin/python3
+""" Hello world in flask"""
 
-'''
-Create a Flask application instance
-'''
+
 from flask import Flask
 
 
 app = Flask(__name__)
 
-'''
-The instance of the Flask application.
-'''
 
-app.url_map.strict_slashes = False
-
-
-@app.route('/')
-def index():
-    '''
-    home page.
-    '''
+@app.route('/', strict_slashes=False)
+def hello_world():
+    """route index"""
     return 'Hello HBNB!'
 
 
-@app.route('/hbnb')
+@app.route('/hbnb', strict_slashes=False)
 def hbnb():
-    '''
-    hbnb page.
-    '''
+    """route index"""
     return 'HBNB'
 
-
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port='5000')
+    app.run(host='0.0.0.0')

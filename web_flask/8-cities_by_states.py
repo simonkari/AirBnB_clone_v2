@@ -1,35 +1,39 @@
 #!/usr/bin/python3
-'''A simple Flask web application.
-'''
-from flask import Flask, render_template
+""" List of states """
 
+
+from flask import Flask
+from flask import session
 from models import storage
-from models.state import State
+from flask import render_template
 
 
 app = Flask(__name__)
-'''The Flask application instance.'''
-app.url_map.strict_slashes = False
 
 
-@app.route('/cities_by_states')
-def cities_by_states():
-    '''The cities_by_states page.'''
-    all_states = list(storage.all(State).values())
-    all_states.sort(key=lambda x: x.name)
-    for state in all_states:
-        state.cities.sort(key=lambda x: x.name)
-    ctxt = {
-        'states': all_states
-    }
-    return render_template('8-cities_by_states.html', **ctxt)
+@app.route('/cities_by_states', strict_slashes=False)
+def cities_ofstate():
+    """cities of a state"""
+    storage.reload()
+    cities_dict = storage.all("City")
+    states_dict = storage.all("State")
+    cities_states = {}
+    states = []
+    for k, v in states_dict.items():
+        states.append([v.id, v.name])
+    for city in cities_dict.values():
+        if city.state_id in cities_states.keys():
+            cities_states[city.state_id].append([city.id, city.name])
+        else:
+            cities_states[city.state_id] = [[city.id, city.name]]
+    return render_template('8-cities_by_states.html', states=states,
+                           cities=cities_states)
 
 
 @app.teardown_appcontext
-def flask_teardown(exc):
-    '''The Flask app/request context end event listener.'''
+def teardown_db(error):
+    """lists states"""
     storage.close()
 
-
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port='5000')
+    app.run(host='0.0.0.0')

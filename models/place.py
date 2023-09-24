@@ -1,23 +1,21 @@
 #!/usr/bin/python3
-""" Place Module for HBNB project """
-
+"""This is the place class"""
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, Integer, Float, Table, ForeignKey
-from sqlalchemy.orm import relationship
-import models
-from os import environ as env
+from sqlalchemy import Column, Integer, String, ForeignKey, Float
+from sqlalchemy.orm import relationship, backref
+from os import environ
+from sqlalchemy import Table, Text
 
-
-place_amenity = Table(
-    'place_amenity', Base.metadata,
-    Column('place_id', String(60), ForeignKey("places.id")),
-    Column('amenity_id', String(60), ForeignKey("amenities.id"))
-)
+place_amenity = Table('place_amenity', Base.metadata,
+                      Column('place_id', String(60), ForeignKey('places.id'),
+                             primary_key=True, nullable=False),
+                      Column('amenity_id', String(60),
+                             ForeignKey('amenities.id'),
+                             primary_key=True, nullable=False))
 
 
 class Place(BaseModel, Base):
-    """
-    This is the class for Place
+    """This is the class for Place
     Attributes:
         city_id: city id
         user_id: user id
@@ -31,49 +29,44 @@ class Place(BaseModel, Base):
         longitude: longitude in float
         amenity_ids: list of Amenity ids
     """
-    __tablename__ = "places"
-    city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
-    user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
+    __tablename__ = 'places'
+    city_id = Column(String(60), ForeignKey("cities.id"), nullable=False)
+    user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
     name = Column(String(128), nullable=False)
-    description = Column(String(1024), nullable=True)
+    description = Column(String(1024))
     number_rooms = Column(Integer, nullable=False, default=0)
     number_bathrooms = Column(Integer, nullable=False, default=0)
     max_guest = Column(Integer, nullable=False, default=0)
     price_by_night = Column(Integer, nullable=False, default=0)
-    latitude = Column(Float, nullable=True)
-    longitude = Column(Float, nullable=True)
+    latitude = Column(Float)
+    longitude = Column(Float)
     amenity_ids = []
-    __reviews = relationship("Review", cascade="all, delete", backref="place")
-    __amenities = relationship(
-        "Amenity",
-        secondary=place_amenity,
-        backref="place",
-        viewonly=False
-    )
+    if 'HBNB_TYPE_STORAGE' in environ and environ['HBNB_TYPE_STORAGE'] == 'db':
+        reviews = relationship('Review', backref="places")
+        amenities = relationship('Amenity',
+                                 secondary="place_amenity",
+                                 back_populates='place_amenities',
+                                 viewonly=False)
+    else:
+        lis = []
 
-    @property
-    def reviews(self):
-        """
-        get all refiews with the current place id
-        from filestorage
-        """
-        if env.get('HBNB_TYPE_STORAGE') == 'db':
-            return self.__reviews
-        list = [
-            v for k, v in models.storage.all(models.Review).items()
-            if v.place_id == self.id
-        ]
-        return (list)
+        @property
+        def review(self):
+            stat = self.id
+            for k, v in models.storage.all().items():
+                if "Review" in k and v.state_id == self.id:
+                    lis.append(v)
+            return lis
 
-    @property
-    def amenities(self):
-        """
-        get all amenities with the current place id
-        """
-        if env.get('HBNB_TYPE_STORAGE') == 'db':
-            return self.__amenities
-        list = [
-            v for k, v in models.storage.all(models.Amenity).items()
-            if v.id in self.amenity_ids
-        ]
-        return (list)
+        @property
+        def amenities(self):
+            stat = self.id
+            for k, v in models.storage.all().items():
+                if "Amenity" in k and v.amenity_id == self.id:
+                    lis.append(v)
+            return lis
+
+        @amenities.setter
+        def amenities(self, value):
+            if value.__class__.__name__ == "Amenity":
+                self.amenity_id.append(str(value.id))
