@@ -6,48 +6,86 @@ A basic Flask web application.
 
 from flask import Flask, render_template
 
+
 app = Flask(__name__)
 
-# Disable strict slashes for URL routing
+'''
+The instance of the Flask application
+'''
+
 app.url_map.strict_slashes = False
+
 
 @app.route('/')
 def index():
-    '''Main page.'''
+    '''
+    Main page.
+    '''
+
     return 'Hello HBNB!'
+
 
 @app.route('/hbnb')
 def hbnb():
-    '''HBNB page.'''
+    '''
+    hbnb page.
+    '''
+
     return 'HBNB'
+
 
 @app.route('/c/<text>')
 def c_page(text):
-    '''C page.'''
+    '''
+    c page.
+    '''
+
     return 'C {}'.format(text.replace('_', ' '))
 
+
 @app.route('/python/<text>')
-@app.route('/python', defaults={'text': 'is cool'})
+@app.route('/python')
 def python_page(text='is cool'):
-    '''Python page.'''
+    '''
+    python page.
+    '''
+
     return 'Python {}'.format(text.replace('_', ' '))
+
 
 @app.route('/number/<int:n>')
 def number_page(n):
-    '''Number page.'''
+    '''
+    Number page.
+    '''
+
     return '{} is a number'.format(n)
+
 
 @app.route('/number_template/<int:n>')
 def number_template(n):
-    '''Number template page.'''
-    ctxt = {'n': n}
+
+    '''
+    The page named number_template
+    '''
+
+    ctxt = {
+        'n': n
+    }
     return render_template('5-number.html', **ctxt)
+
 
 @app.route('/number_odd_or_even/<int:n>')
 def number_odd_or_even(n):
-    '''Number odd or even page.'''
-    ctxt = {'n': n}
+    '''
+    The page titled 'number_odd_or_even
+    '''
+
+    ctxt = {
+        'n': n
+    }
     return render_template('6-number_odd_or_even.html', **ctxt)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port='5000')
