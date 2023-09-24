@@ -1,91 +1,50 @@
 #!/usr/bin/python3
+""" 
+Hello World in Flask
+"""
 
-'''
-A basic Flask web application.
-'''
+# Import the Flask framework
+from flask import Flask
 
-from flask import Flask, render_template
-
-
+# Create a Flask application instance
 app = Flask(__name__)
 
-'''
-The instance of the Flask application
-'''
-
-app.url_map.strict_slashes = False
-
-
-@app.route('/')
-def index():
-    '''
-    Main page.
-    '''
-
+# Define a route for the root URL '/'
+@app.route('/', strict_slashes=False)
+def hello_world():
+    """
+    Route for the root URL
+    """
     return 'Hello HBNB!'
 
-
-@app.route('/hbnb')
+# Define a route for the URL '/hbnb'
+@app.route('/hbnb', strict_slashes=False)
 def hbnb():
-    '''
-    hbnb page.
-    '''
-
+    """
+    Route for '/hbnb'
+    """
     return 'HBNB'
 
+# Define a route for URLs starting with '/c/' followed by a variable 'text'
+@app.route('/c/<text>', strict_slashes=False)
+def ctext(text):
+    """
+    Route for '/c/<text>'
+    Replaces underscores in 'text' with spaces
+    """
+    return 'C %s' % text.replace('_', ' ')
 
-@app.route('/c/<text>')
-def c_page(text):
-    '''
-    c page.
-    '''
+# Define a route for the URL '/python' with an optional variable 'text'
+# Defaults to 'is cool' if 'text' is not provided
+@app.route('/python', defaults={'text': 'is cool'}, strict_slashes=False)
+@app.route('/python/<text>', strict_slashes=False)
+def ctextdefault(text):
+    """
+    Route for '/python' with an optional 'text' parameter
+    Replaces underscores in 'text' with spaces
+    """
+    return 'Python %s' % text.replace('_', ' ')
 
-    return 'C {}'.format(text.replace('_', ' '))
-
-
-@app.route('/python/<text>')
-@app.route('/python')
-def python_page(text='is cool'):
-    '''
-    python page.
-    '''
-
-    return 'Python {}'.format(text.replace('_', ' '))
-
-
-@app.route('/number/<int:n>')
-def number_page(n):
-    '''
-    Number page.
-    '''
-
-    return '{} is a number'.format(n)
-
-
-@app.route('/number_template/<int:n>')
-def number_template(n):
-
-    '''
-    The page named number_template
-    '''
-
-    ctxt = {
-        'n': n
-    }
-    return render_template('5-number.html', **ctxt)
-
-
-@app.route('/number_odd_or_even/<int:n>')
-def number_odd_or_even(n):
-    '''
-    The page titled 'number_odd_or_even
-    '''
-
-    ctxt = {
-        'n': n
-    }
-    return render_template('6-number_odd_or_even.html', **ctxt)
-
-
+# Run the Flask application if this script is the main program
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port='5000')
+    app.run(host='0.0.0.0')
