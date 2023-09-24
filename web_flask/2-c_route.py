@@ -1,30 +1,42 @@
 #!/usr/bin/python3
-""" Hello world in flask"""
 
+'''
+A basic web application built with Flask.
+'''
 
 from flask import Flask
 
 
 app = Flask(__name__)
+'''
+The instance of the Flask application
+'''
+app.url_map.strict_slashes = False
 
 
-@app.route('/', strict_slashes=False)
-def hello_world():
-    """route index"""
+@app.route('/')
+def index():
+    '''
+    Home page.
+    '''
     return 'Hello HBNB!'
 
 
-@app.route('/hbnb', strict_slashes=False)
+@app.route('/hbnb')
 def hbnb():
-    """route HBNB"""
+    '''
+    hbnb page.
+    '''
     return 'HBNB'
 
 
-@app.route('/c/<text>', strict_slashes=False)
-def ctext(text):
-    """route C"""
-    return 'C %s' % text.replace('_', ' ')
+@app.route('/c/<text>')
+def c_page(text):
+    '''
+    c page.
+    '''
+    return 'C {}'.format(text.replace('_', ' '))
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port='5000')
