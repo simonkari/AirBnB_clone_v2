@@ -5,8 +5,8 @@ This is the State class.
 import models
 import shlex
 from models.base_model import BaseModel, Base
-from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String
+from sqlalchemy.orm import relationship
 from os import environ as env
 
 
@@ -24,8 +24,8 @@ class State(BaseModel, Base):
 
     @property
     def cities(self):
-        """
-        Retrieve all cities with the current state ID from FileStorage
+        """get all cities with the current state id
+        from filestorage
         """
 
         var = models.storage.all()
