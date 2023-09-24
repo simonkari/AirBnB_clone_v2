@@ -22,7 +22,7 @@ def states():
     cities = None
     states_dict = storage.all("State")
     states = []
-    for s, k in states_dict.items():
+    for k, v in states_dict.items():
         states.append([v.id, v.name])
     return render_template('9-states.html', states=states,
                            cities=cities, id=None)
@@ -39,13 +39,13 @@ def states_id(id):
     cities_states = []
     states = []
     state = []
-    for s, k in states_dict.items():
+    for k, v in states_dict.items():
         states.append([v.id, v.name])
     for city in cities_dict.values():
         if city.state_id == id:
             cities_states.append([city.id, city.name])
-    for i in states:
-        if i[0] == id:
+    for s in states:
+        if s[0] == id:
             state.append([s[0], s[1]])
     if (len(state) != 0):
         state = state[0][1]
