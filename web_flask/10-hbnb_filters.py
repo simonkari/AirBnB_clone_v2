@@ -1,11 +1,13 @@
 #!/usr/bin/python3
-""" List of states """
+"""
+Enumeration of states
+"""
 
 
 from flask import Flask
+from flask import render_template
 from flask import session
 from models import storage
-from flask import render_template
 
 
 app = Flask(__name__)
@@ -13,7 +15,9 @@ app = Flask(__name__)
 
 @app.route('/hbnb_filters', strict_slashes=False)
 def filters():
-    """lists states"""
+    """
+    Enumerates states
+    """
     storage.reload()
     cities_dict = storage.all("City")
     states_dict = storage.all("State")
@@ -37,7 +41,9 @@ def filters():
 
 @app.teardown_appcontext
 def teardown_db(error):
-    """lists states"""
+    """
+    lists states
+    """
     storage.close()
 
 if __name__ == '__main__':
