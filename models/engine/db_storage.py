@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """
-This module defines a class to manage database
-storage for hbnb clone
+This module defines a class for managing database storage
+in the context of the hbnb clone
 """
 import os
 from sqlalchemy import create_engine
@@ -19,15 +19,15 @@ from models.review import Review
 
 class DBStorage:
     """
-    This class manages storage of hbnb models in a
-    SQL database
+    This class oversees the storage of hbnb models
+    in an SQL database.
     """
     __engine = None
     __session = None
 
     def __init__(self):
         """
-        Initializes the SQL database storage
+        Initializes the SQL database storage system.
         """
         user = os.getenv('HBNB_MYSQL_USER')
         pword = os.getenv('HBNB_MYSQL_PWD')
@@ -46,7 +46,7 @@ class DBStorage:
 
     def all(self, cls=None):
         """
-        Returns a dictionary of models currently in storage
+        Provides a dictionary containing the models currently stored
         """
         objects = dict()
         all_classes = (User, State, City, Amenity, Place, Review)
@@ -65,7 +65,7 @@ class DBStorage:
 
     def delete(self, obj=None):
         """
-        Removes an object from the storage database
+        Deletes an object from the storage database.
         """
         if obj is not None:
             self.__session.query(type(obj)).filter(
@@ -75,7 +75,7 @@ class DBStorage:
 
     def new(self, obj):
         """
-        Adds new object to storage database
+        Inserts a new object into the storage database.
         """
         if obj is not None:
             try:
@@ -88,12 +88,13 @@ class DBStorage:
 
     def save(self):
         """
-        Commits the session changes to database
+        Applies the session changes to the database
+        by committing them.
         """
         self.__session.commit()
 
     def reload(self):
-        """Loads storage database"""
+        """Loads data from the storage database"""
         Base.metadata.create_all(self.__engine)
         SessionFactory = sessionmaker(
             bind=self.__engine,
@@ -103,6 +104,6 @@ class DBStorage:
 
     def close(self):
         """
-        Closes the storage engine.
+        Terminates the storage engine.
         """
         self.__session.close()
