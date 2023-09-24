@@ -25,9 +25,9 @@ class State(BaseModel, Base):
     @property
     def cities(self):
         """
-        Retrieve all cities with the current state ID
-        from FileStorage
+        Retrieve all cities with the current state ID from FileStorage
         """
+
         var = models.storage.all()
         list = []
         results = []
