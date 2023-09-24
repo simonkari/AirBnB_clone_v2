@@ -1,15 +1,17 @@
 #!/usr/bin/python3
-"""This is the state class"""
-from models.base_model import BaseModel, Base
+"""
+The state class
+"""
 from sqlalchemy import Column, String
+import models
+from models.base_model import BaseModel, Base
+import shlex
 from sqlalchemy.orm import relationship
 from os import environ as env
-import models
-import shlex
 
 
 class State(BaseModel, Base):
-    """This is the class for State
+    """The class for State
     Attributes:
         __tablename__: table name
         name: input name
@@ -21,20 +23,20 @@ class State(BaseModel, Base):
 
     @property
     def cities(self):
-        """get all cities with the current state id
-        from filestorage or custom storage if not DBStorage
         """
-        from models import storage  # Import the storage module
+        Retrieve all cities with the current state
+        ID from FileStorage
+        """
 
-        if storage.__class__.__name__ != 'DBStorage':
-            # If storage is not DBStorage, use custom retrieval logic
-            city_list = []
-            for city in storage.all(City).values():
-                if city.state_id == self.id:
-                    city_list.append(city)
-            return city_list
-
-        # If storage is DBStorage, rely on the relationship
-        # defined in the SQLAlchemy model
-        return self.cities
-  
+        var = models.storage.all()
+        list = []
+        results = []
+        for key in var:
+            city = key.replace('.', ' ')
+            city = shlex.split(city)
+            if (city[0] == 'City'):
+                list.append(var[key])
+        for elem in list:
+            if (elem.state_id == self.id):
+                results.append(elem)
+        return (results)
