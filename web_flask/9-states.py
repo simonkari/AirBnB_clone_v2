@@ -1,13 +1,11 @@
 #!/usr/bin/python3
-"""
-This script initiates a Flask-based web application
-"""
+"""This script starts a Flask web application"""
 
 from flask import Flask
 from flask import render_template
+from models import storage
 from models.state import State
 import subprocess
-from models import storage
 
 
 app = Flask(__name__)
@@ -15,9 +13,8 @@ app = Flask(__name__)
 
 @app.route('/states', strict_slashes=False)
 def states():
-    """
-    This function is triggered when a request is made to
-    0.0.0.0:5000/states
+    """This function executes when 0.0.0.0:/5000/states
+    is requested
     """
     state_list = storage.all(State)
     states = []
@@ -28,8 +25,8 @@ def states():
 
 @app.route('/states/<id>', strict_slashes=False)
 def single_state(id):
-    """
-    This function runs upon a request to 0.0.0.0:5000/states.
+    """This function executes when 0.0.0.0:/5000/states
+    is requested
     """
     state_list = storage.all(State)
     state = {}
@@ -41,9 +38,7 @@ def single_state(id):
 
 @app.teardown_appcontext
 def tear_down_context(exception):
-    """
-    This function deletes the existing SQLAlchemy Session.
-    """
+    """This function removes the current SQLAlchemy Session"""
     storage.close()
 
 
