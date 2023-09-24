@@ -1,34 +1,42 @@
 #!/usr/bin/python3
-"""This script starts a Flask web application"""
 
-from flask import Flask
-from flask import render_template
+'''
+An uncomplicated Flask web application.
+'''
+
+from flask import Flask, render_template
+
+from models.state import State
 from models import storage
-import subprocess
 
 
 app = Flask(__name__)
+'''
+The instance of the Flask application
+'''
+app.url_map.strict_slashes = False
 
 
-@app.route('/states_list', strict_slashes=False)
+@app.route('/states_list')
 def states_list():
-    """This function executes when 0.0.0.0:/5000/states_list
-    is requested
-    """
-    state_list = storage.all("State")
-    states = []
-    for value in state_list.values():
-        states.append(value)
-    return render_template('7-states_list.html', states=states)
+    '''
+    The page titled states_list
+    '''
+    all_states = list(storage.all(State).values())
+    all_states.sort(key=lambda x: x.name)
+    ctxt = {
+        'states': all_states
+    }
+    return render_template('7-states_list.html', **ctxt)
 
 
 @app.teardown_appcontext
-def tear_down_context(exception):
-    """This function removes the current SQLAlchemy Session"""
+def flask_teardown(exc):
+    '''
+    The event listener for the Flask app/request context ending.
+    '''
     storage.close()
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
-    subprocess.run("export", "FLASK_APP=7-states_list.py")
-    subprocess.run("flask run")
+    app.run(host='0.0.0.0', port='5000')
