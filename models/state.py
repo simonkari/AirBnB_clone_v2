@@ -28,7 +28,6 @@ class State(BaseModel, Base):
         Retrieve all cities with the current state ID
         from FileStorage
         """
-
         var = models.storage.all()
         list = []
         results = []
