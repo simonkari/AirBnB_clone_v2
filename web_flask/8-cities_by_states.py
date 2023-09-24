@@ -1,11 +1,13 @@
 #!/usr/bin/python3
-""" List of states """
+"""
+Enumerates states
+"""
 
 
-from flask import Flask
 from flask import session
-from models import storage
+from flask import Flask
 from flask import render_template
+from models import storage
 
 
 app = Flask(__name__)
@@ -13,7 +15,9 @@ app = Flask(__name__)
 
 @app.route('/cities_by_states', strict_slashes=False)
 def cities_ofstate():
-    """cities of a state"""
+    """
+    cities to a state
+    """
     storage.reload()
     cities_dict = storage.all("City")
     states_dict = storage.all("State")
@@ -32,7 +36,9 @@ def cities_ofstate():
 
 @app.teardown_appcontext
 def teardown_db(error):
-    """lists states"""
+    """
+    lists states
+    """
     storage.close()
 
 if __name__ == '__main__':
