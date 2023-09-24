@@ -19,21 +19,22 @@ class State(BaseModel, Base):
     name = Column(String(128), nullable=False)
     cities = relationship("City", cascade="all, delete", backref="state")
 
+
     @property
     def cities(self):
         """get all cities with the current state id
-        from filestorage
+        from filestorage or custom storage if not DBStorage
         """
+        from models import storage  # Import the storage module
 
-        var = models.storage.all()
-        list = []
-        results = []
-        for key in var:
-            city = key.replace('.', ' ')
-            city = shlex.split(city)
-            if (city[0] == 'City'):
-                list.append(var[key])
-        for elem in list:
-            if (elem.state_id == self.id):
-                results.append(elem)
-        return (results)
+        if storage.__class__.__name__ != 'DBStorage':
+            # If storage is not DBStorage, use custom retrieval logic
+            city_list = []
+            for city in storage.all(City).values():
+                if city.state_id == self.id:
+                    city_list.append(city)
+            return city_list
+
+        # If storage is DBStorage, rely on the relationship
+        # defined in the SQLAlchemy model
+        return self.cities
