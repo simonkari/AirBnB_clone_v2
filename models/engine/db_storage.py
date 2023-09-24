@@ -16,8 +16,8 @@ class DBStorage:
     """
     This class serializes instances for database storage
     Attributes:
-        __engine: engin to connect db
-        __session: session to interact with db
+        __engine: engine to connect to the database
+        __session: session to interact with the database
         __clsdict: dictionary of all classes
     """
     __engine = None
@@ -32,7 +32,7 @@ class DBStorage:
     }
 
     def __init__(self):
-        """setup __engine
+        """Setup __engine
         """
         self.__engine = create_engine(
             "mysql+mysqldb://{}:{}@{}:3306/{}".format(
@@ -47,7 +47,7 @@ class DBStorage:
 
     def all(self, cls=None):
         """
-        query for objects depend on the class
+        Query for objects depending on the class
         Arguments:
             cls: class to query
         """
@@ -58,15 +58,15 @@ class DBStorage:
                 data["{}.{}".format(
                     cls.__name__, obj.id
                     )] = obj
-            return (data)
+            return data
         for k, cls in self.__clsdict.items():
             for obj in self.__session.query(cls):
                 data["{}.{}".format(cls.__name__, obj.id)] = obj
-        return (data)
+        return data
 
     def new(self, obj):
         """
-        Add an object to current db session
+        Add an object to the current db session
         Arguments:
             obj: object to add
         """
@@ -75,13 +75,13 @@ class DBStorage:
 
     def save(self):
         """
-        Commit all changes of current db session
+        Commit all changes of the current db session
         """
         self.__session.commit()
 
     def delete(self, obj=None):
         """
-        Deletes obj from current db session
+        Deletes obj from the current db session
         Arguments:
             obj: object to delete
         """
@@ -98,7 +98,7 @@ class DBStorage:
 
     def close(self):
         """
-        Removes current session and rolls back all unsaved transactions
+        Removes the current session and rolls back all unsaved transactions
         """
         if self.__session:
-            self.__session.close()
+            self.__session.remove()
