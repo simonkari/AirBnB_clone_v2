@@ -1,14 +1,11 @@
 #!/usr/bin/python3
-"""
-This is the State class.
-"""
-import models
-import shlex
+"""This is the state class"""
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from os import environ as env
-
+import models
+import shlex
 
 
 class State(BaseModel, Base):
