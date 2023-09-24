@@ -1,27 +1,20 @@
 #!/usr/bin/python3
-
+'''A simple Flask web application.
 '''
-An uncomplicated Flask web application.
-'''
-
 from flask import Flask, render_template
 
-from models.state import State
 from models import storage
+from models.state import State
 
 
 app = Flask(__name__)
-'''
-The instance of the Flask application
-'''
+'''The Flask application instance.'''
 app.url_map.strict_slashes = False
 
 
 @app.route('/states_list')
 def states_list():
-    '''
-    The page titled states_list
-    '''
+    '''The states_list page.'''
     all_states = list(storage.all(State).values())
     all_states.sort(key=lambda x: x.name)
     ctxt = {
@@ -32,9 +25,7 @@ def states_list():
 
 @app.teardown_appcontext
 def flask_teardown(exc):
-    '''
-    The event listener for the Flask app/request context ending.
-    '''
+    '''The Flask app/request context end event listener.'''
     storage.close()
 
 
