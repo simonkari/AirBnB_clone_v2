@@ -1,42 +1,34 @@
 #!/usr/bin/python3
-"""
-The state class
-"""
-import models
-import shlex
+""" State Module for HBNB project """
 from models.base_model import BaseModel, Base
+from os import getenv
+import sqlalchemy
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
-from os import environ as env
 
 
 class State(BaseModel, Base):
-    """This is the class for State
-    Attributes:
-        __tablename__: table name
-        name: input name
-        cities: relation to cities table
-    """
-    __tablename__ = "states"
-    name = Column(String(128), nullable=False)
-    cities = relationship("City", cascade="all, delete", backref="state")
+    """ State class """
+    __tablename__ = 'states'
+    if getenv('HBNB_TYPE_STORAGE') == 'db':
+        name = Column(String(128), nullable=False)
+        cities = relationship("City", cascade="all, delete",
+                              backref="state")
+    else:
+        name = ""
 
-    @property
-    def cities(self):
-        """
-        Get all cities with the current state id
-        from filestorage
-        """
-
-        var = models.storage.all()
-        list = []
-        results = []
-        for key in var:
-            city = key.replace('.', ' ')
-            city = shlex.split(city)
-            if (city[0] == 'City'):
-                list.append(var[key])
-        for elem in list:
-            if (elem.state_id == self.id):
-                results.append(elem)
-        return (results)
+        @property
+        def cities(self):
+            '''
+                Return list of city instances if City.state_id==current
+                State.id
+                FileStorage relationship between State and City
+            '''
+            from models import storage
+            from models.city import City
+            related_cities = []
+            cities = storage.all(City)
+            for city in cities.values():
+                if city.state_id == self.id:
+                    related_cities.append(city)
+            return related_cities
