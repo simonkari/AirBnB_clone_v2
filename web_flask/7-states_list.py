@@ -1,30 +1,22 @@
 #!/usr/bin/python3
-""" List of states """
+"""List of states"""
 
-
-from flask import Flask
-from flask import session
+from flask import Flask, render_template
 from models import storage
-from flask import render_template
-
 
 app = Flask(__name__)
 
-
 @app.route('/states_list', strict_slashes=False)
 def states():
-    """lists states"""
+    """Lists states"""
     storage.reload()
     states_dict = storage.all("State")
-    states = []
-    for k, v in states_dict.items():
-        states.append([v.id, v.name])
+    states = [[v.id, v.name] for k, v in states_dict.items()]
     return render_template('7-states_list.html', states=states)
-
 
 @app.teardown_appcontext
 def teardown_db(error):
-    """lists states"""
+    """Closes the database connection"""
     storage.close()
 
 if __name__ == '__main__':
