@@ -23,7 +23,8 @@ class State(BaseModel, Base):
 
     @property
     def cities(self):
-        """get all cities with the current state id
+        """
+        Get all cities with current state id
         from filestorage
         """
 
