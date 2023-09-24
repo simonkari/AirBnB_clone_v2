@@ -1,8 +1,12 @@
 #!/usr/bin/python3
-"""List of states"""
+""" List of states """
 
-from flask import Flask, render_template
+
+from flask import Flask
+from flask import render_template
+from flask import session
 from models import storage
+
 
 app = Flask(__name__)
 
