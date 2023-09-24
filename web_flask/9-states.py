@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 """
-Enumerates states
+This script initiates a Flask-based web application
 """
-
 
 from flask import Flask
 from flask import render_template
-from flask import session
+from models.state import State
+import subprocess
 from models import storage
 
 
@@ -16,51 +16,38 @@ app = Flask(__name__)
 @app.route('/states', strict_slashes=False)
 def states():
     """
-    Enumerates states
+    This function is triggered when a request is made to
+    0.0.0.0:5000/states
     """
-    storage.reload()
-    cities = None
-    states_dict = storage.all("State")
+    state_list = storage.all(State)
     states = []
-    for k, v in states_dict.items():
-        states.append([v.id, v.name])
-    return render_template('9-states.html', states=states,
-                           cities=cities, id=None)
+    for value in state_list.values():
+        states.append(value)
+    return render_template('9-states.html', states=states, id=None)
 
 
 @app.route('/states/<id>', strict_slashes=False)
-def states_id(id):
+def single_state(id):
     """
-    lists states
+    This function runs upon a request to 0.0.0.0:5000/states.
     """
-    storage.reload()
-    cities_dict = storage.all("City")
-    states_dict = storage.all("State")
-    cities_states = []
-    states = []
-    state = []
-    for k, v in states_dict.items():
-        states.append([v.id, v.name])
-    for city in cities_dict.values():
-        if city.state_id == id:
-            cities_states.append([city.id, city.name])
-    for s in states:
-        if s[0] == id:
-            state.append([s[0], s[1]])
-    if (len(state) != 0):
-        state = state[0][1]
-    if (len(cities_states) != 0 and len(state) != 0):
-        return render_template('9-states.html', states=state,
-                               cities=cities_states, id=id)
-    return render_template('9-states.html', states=None, cities=None, id=0)
+    state_list = storage.all(State)
+    state = {}
+    for key, value in state_list.items():
+        if value.id == id:
+            state = state_list[key]
+    return render_template('9-states.html', id=id, state=state)
 
 
 @app.teardown_appcontext
-def teardown_db(error):
+def tear_down_context(exception):
     """
-    Enumerates states
+    This function deletes the existing SQLAlchemy Session.
     """
     storage.close()
 
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
+    subprocess.run("export", "FLASK_APP=9-states.py")
+    subprocess.run("flask run")
