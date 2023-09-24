@@ -1,38 +1,42 @@
 #!/usr/bin/python3
 """
-State Class from Models Module
+The state class
 """
-import os
 import models
+import shlex
 from models.base_model import BaseModel, Base
+from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
-from sqlalchemy import Column, Integer, String, Float
+from os import environ as env
 
-storage_type = os.environ.get('HBNB_TYPE_STORAGE')
 
 class State(BaseModel, Base):
-    """State class handles all application states"""
-    
-    if storage_type == "db":
-        __tablename__ = 'states'
-        name = Column(String(128), nullable=False)
-        cities = relationship('City', backref='state', cascade='delete')
-    
-    else:
-        name = ''
+    """This is the class for State
+    Attributes:
+        __tablename__: table name
+        name: input name
+        cities: relation to cities table
+    """
+    __tablename__ = "states"
+    name = Column(String(128), nullable=False)
+    cities = relationship("City", cascade="all, delete", backref="state")
 
-class StateFileStorage(State):
-    """
-    State class with a file storage implementation for 'cities' property
-    """
     @property
     def cities(self):
         """
-        Getter method, returns a list of City objects from storage
-        linked to the current State
+        Get all cities with the current state id
+        from filestorage
         """
-        city_list = []
-        for city in models.storage.all("City").values():
-            if city.state_id == self.id:
-                city_list.append(city)
-        return city_list
+
+        var = models.storage.all()
+        list = []
+        results = []
+        for key in var:
+            city = key.replace('.', ' ')
+            city = shlex.split(city)
+            if (city[0] == 'City'):
+                list.append(var[key])
+        for elem in list:
+            if (elem.state_id == self.id):
+                results.append(elem)
+        return (results)
