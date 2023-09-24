@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """
-This module defines a class to manage file storage
-for hbnb clone
+This module defines a class for managing file storage in
+the context of the hbnb clone.
 """
 import json
 import os
@@ -10,15 +10,15 @@ from importlib import import_module
 
 class FileStorage:
     """
-    This class manages storage of hbnb models in
-    JSON format
+    This class oversees the storage of hbnb models
+    in JSON format
     """
     __file_path = 'file.json'
     __objects = {}
 
     def __init__(self):
         """
-        Initializes a FileStorage instance
+        Creates a new FileStorage instance
         """
         self.model_classes = {
             'BaseModel': import_module('models.base_model').BaseModel,
@@ -32,7 +32,7 @@ class FileStorage:
 
     def all(self, cls=None):
         """
-        Returns a dictionary of models currently in storage
+        Provides a dictionary containing the models currently stored.
         """
         if cls is None:
             return self.__objects
@@ -45,7 +45,7 @@ class FileStorage:
 
     def delete(self, obj=None):
         """
-        Removes an object from the storage dictionary
+        Deletes an object from the storage dictionary.
         """
         if obj is not None:
             obj_key = obj.to_dict()['__class__'] + '.' + obj.id
@@ -54,7 +54,7 @@ class FileStorage:
 
     def new(self, obj):
         """
-        Adds new object to storage dictionary
+        Inserts a new object into the storage dictionary.
         """
         self.__objects.update(
             {obj.to_dict()['__class__'] + '.' + obj.id: obj}
@@ -72,7 +72,7 @@ class FileStorage:
 
     def reload(self):
         """
-        Loads storage dictionary from file
+        Loads the storage dictionary from a file
         """
         classes = self.model_classes
         if os.path.isfile(self.__file_path):
@@ -84,6 +84,6 @@ class FileStorage:
 
     def close(self):
         """
-        Closes the storage engine.
+        Terminates the storage engine
         """
         self.reload()
