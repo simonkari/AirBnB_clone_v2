@@ -1,5 +1,7 @@
 #!/usr/bin/python3
-"""This is the state class"""
+"""
+The state class
+"""
 import models
 import shlex
 from models.base_model import BaseModel, Base
