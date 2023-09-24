@@ -1,7 +1,9 @@
 #!/usr/bin/python3
-""""Create a web app to display states as a list"""
-from models import storage
+""""
+Develop a web application for presenting a list of states
+"""
 from flask import Flask, render_template
+from models import storage
 
 
 app = Flask(__name__)
@@ -10,7 +12,9 @@ app = Flask(__name__)
 @app.route('/states', strict_slashes=False)
 @app.route('/states/<state_id>', strict_slashes=False)
 def states(state_id=None):
-    """display the states and cities listed in alphabetical order"""
+    """
+    Present the states and cities in alphabetical order.
+    """
     states = storage.all("State")
     if state_id is not None:
         state_id = 'State.' + state_id
@@ -19,7 +23,9 @@ def states(state_id=None):
 
 @app.teardown_appcontext
 def teardown(exc):
-    """Close sqlalchemy session"""
+    """
+    Terminate the SQLAlchemy session.
+    """
     storage.close()
 
 
