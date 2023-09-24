@@ -1,29 +1,26 @@
 #!/usr/bin/python3
-"""This is the state class"""
+"""Defines the State class"""
+from os import getenv
 from models.base_model import BaseModel, Base
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import relationship, backref
-from os import environ
+from models.city import City
+from sqlalchemy import Column, String
+from sqlalchemy.orm import relationship
 import models
 
 
 class State(BaseModel, Base):
-    """This is the class for State
-    Attributes:
-        name: input name
-    """
-    __tablename__ = 'states'
+    """Class state created"""
+    __tablename__ = "states"
     name = Column(String(128), nullable=False)
-    if 'HBNB_TYPE_STORAGE' in environ and environ['HBNB_TYPE_STORAGE'] == 'db':
-        cities = relationship('City', cascade="all, delete-orphan",
-                              backref="state")
-    else:
+    cities = relationship("City",  backref="state", cascade="delete")
+
+    if getenv("HBNB_TYPE_STORAGE") != "db":
         @property
         def cities(self):
-            lis = []
-            stat = self.id
-            for k, v in models.storage.all().items():
-                if "City" in k and v.state_id == self.id:
-                    lis.append(v)
-            return lis
+            """A relationship between state and city"""
+            city_list = []
+            all_cities = models.storage.all(City)
+            for value in all_cities.values():
+                if value.state_id == self.id:
+                    city_list.append(value)
+            return city_list
